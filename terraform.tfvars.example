@@ -1,0 +1,8 @@
+# Srodowisko projektu.
+env = "dev"
+
+# Ustaw true na koncie AWS, ktore pozwala utworzyc Glue Job.
+create_glue_job = false
+
+
+# Haslo bazy przekaz przez TF_VAR_db_password.
