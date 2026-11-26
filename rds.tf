@@ -1,20 +1,10 @@
-variable "env" {
-  type    = string
-  default = "dev"
-}
-
-variable "db_password" {
-  type      = string
-  sensitive = true
-}
-
 resource "aws_db_subnet_group" "rds" {
-  name       = "ecommerce-${var.env}-rds"
+  name       = "${local.name_prefix}-rds"
   subnet_ids = [for subnet in aws_subnet.rds_private : subnet.id]
 }
 
 resource "aws_security_group" "rds" {
-  name   = "ecommerce-${var.env}-rds"
+  name   = "${local.name_prefix}-rds"
   vpc_id = aws_vpc.rds.id
 
   ingress {
@@ -27,14 +17,14 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_db_instance" "postgres" {
-  identifier        = "ecommerce-${var.env}-postgres"
+  identifier        = "${local.name_prefix}-postgres"
   engine            = "postgres"
   engine_version    = "15.19"
   instance_class    = "db.t3.micro"
   allocated_storage = 20
 
   db_name  = "ecommerce"
-  username = "dbadmin"
+  username = var.db_username
   password = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.rds.name
@@ -42,7 +32,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = false
   storage_encrypted      = true
 
-  deletion_protection       = var.env == "prod"
+  deletion_protection       = local.env_config[var.env].deletion_protection
   skip_final_snapshot       = var.env != "prod"
   final_snapshot_identifier = var.env == "prod" ? "ecommerce-prod-postgres-final" : null
 }

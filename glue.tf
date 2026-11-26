@@ -1,8 +1,3 @@
-variable "create_glue_job" {
-  type    = bool
-  default = true
-}
-
 resource "aws_s3_object" "orders_etl" {
   bucket = aws_s3_bucket.data["raw"].id
   key    = "glue_scripts/orders_etl.py"
