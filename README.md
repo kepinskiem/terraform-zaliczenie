@@ -48,6 +48,10 @@ aws sts get-caller-identity --profile ecommerce-dev
 
 & $tf validate
 
+$env:TF_VAR_db_username = Read-Host 'Nazwa uzytkownika RDS'
+
+$env:TF_VAR_db_username = Read-Host 'Nazwa uzytkownika RDS'
+
 $hasloRds = Read-Host 'Haslo dla dbadmin' -AsSecureString
 
 $env:TF_VAR_db_password = [System.Net.NetworkCredential]::new('', $hasloRds).Password
@@ -124,4 +128,21 @@ RDS działa na PostgreSQL `15.19`, ponieważ wersji `15.4` nie było na liście 
 4. **`Please run 'az login' to setup account`.** `plan` i `apply` w katalogu `azure/` wymagają zalogowania i aktywnej subskrypcji. Samo `validate` można wykonać bez logowania.
 
 5. **Ostrzeżenie o `dynamodb_table`.** Terraform oznacza ten parametr jako wycofywany. Projekt zachowuje go, ponieważ zaliczenie wymaga blokady DynamoDB.
+
+
+## Dowody wykonania
+
+Weryfikacja dotyczy wdrożonego środowiska AWS `dev` z `create_glue_job=false`.
+
+### Wynik `terraform apply`
+
+![Terraform apply — zero zmian w zasobach](evidence/terraform-apply.png)
+
+[Pełny wynik apply](evidence/terraform-apply.txt)
+
+### Ponowny `terraform plan`
+
+![Terraform plan po apply — No changes](evidence/terraform-plan-after-apply.png)
+
+[Pełny wynik planu](evidence/terraform-plan-after-apply.txt)
 
